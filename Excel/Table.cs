@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Excel
 {
-    class Table
+    public class Table
     {
         public Dictionary<string, List<string>> Items = new Dictionary<string, List<string>>();
 

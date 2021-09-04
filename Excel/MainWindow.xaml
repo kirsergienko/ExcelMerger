@@ -3,11 +3,49 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Excel"
+        xmlns:local="clr-namespace:Excel" xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="400" Width="330">
     <Grid>
-       
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="83*"/>
+            <RowDefinition Height="202*"/>
+            <RowDefinition Height="42*"/>
+            <RowDefinition Height="42*"/>
+        </Grid.RowDefinitions>
+        <Rectangle Fill="Gray"></Rectangle>
+        <Rectangle Fill="#FFC5BFBF" Grid.Row="2" ></Rectangle>
+        <Rectangle Fill="Gray" Grid.Row="3"></Rectangle>
+
+        <StackPanel Grid.Row="0">
+            <Label Content="Координаты шапки таблиц:"></Label>
+            <WrapPanel>
+                <Label Content="R1:"></Label>
+                <TextBox x:Name="r1textbox" Width="40" Height="15" Margin="5"></TextBox>
+                <Label Content="R2:"></Label>
+                <TextBox x:Name="r2textbox" Width="40" Height="15" Margin="5"></TextBox>
+                <Label Content="C1:"></Label>
+                <TextBox x:Name="c1textbox" Width="40" Height="15" Margin="5"></TextBox>
+                <Label Content="C2:"></Label>
+                <TextBox x:Name="c2textbox" Width="40" Height="15" Margin="5"></TextBox>
+                <Label Content="Номер столбца для сортировки:"></Label>
+                <TextBox x:Name="orderByTextbox" Width="40" Height="15"></TextBox>
+            </WrapPanel>
+        </StackPanel>
+        <ListBox x:Name="listbox" Grid.Row="1"  VerticalAlignment="Stretch" Background="#FFC5BFBF"/>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="addButton" Content="Добавить файл" Click="addButton_Click" Margin="30,5,30,10"></Button>
+            <Button x:Name="removeButton" Content="Удалить файл" Grid.Column="1" Click="removeButton_Click" Margin="30,5,30,10"></Button>
+        </Grid>
+        <Button x:Name="startButton" Content="Старт" Grid.Row="3" Click="startButton_Click" Margin="80,5,80,10"></Button>
+        <StackPanel Background="Gray" x:Name="loadingStackPanel" Grid.RowSpan="5" Grid.ColumnSpan="5"  Visibility="Hidden">
+            <Label Content="Загрузка" FontSize="44" VerticalAlignment="Center" HorizontalAlignment="Center" Height="69" Width="198" FontFamily="Georgia" Margin="0,30,0,10"/>
+            <fa:ImageAwesome Icon="Spinner" Spin="True" SpinDuration="4" Height="206" Width="218" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="52,0" />
+        </StackPanel>
     </Grid>
 </Window>
