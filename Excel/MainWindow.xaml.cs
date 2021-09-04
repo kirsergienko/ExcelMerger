@@ -110,8 +110,6 @@ namespace Excel
 
                 thread.Start();
 
-                //AsyncStart();
-
                 loadingStackPanel.Visibility = Visibility.Visible;
 
             }
@@ -189,60 +187,6 @@ namespace Excel
             }
         }
 
-        public async Task AsyncStart()
-        {
-            if (CheckningSettings())
-            {
-                CreateExcelFiles();
-
-                await Dispatcher.BeginInvoke(new Action(async () =>
-                {
-                    await Task.Factory.StartNew(() =>
-                    {
-                        table.SetExcelApp(excelApp[0]);
-
-                        table.AddHeaders(r1, c1, r2, c2);
-
-                        // set value 
-
-                        int i = 0;
-
-                        foreach (var app in excelApp)
-                        {
-                            if (i != 0)
-                            {
-                                table.SetExcelApp(app);
-                            }
-
-                            try
-                            {
-                                if (excelApp[i].Opened)
-                                {
-                                    table.AddValues(c1, r2, c2, orderby);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                sameTables = false;
-                            }
-                            i++;
-                        }
-                        // fill excel file
-                        if (sameTables)
-                        {
-                            newApp.TableToExcelFile(table, path);
-                        }
-                        else
-                        {
-                            MessageBox.Show("Таблицы не одинаковы!");
-                        }
-
-                        LoadEnd();
-                    });
-                }));
-
-            }
-        }
 
         public bool CheckningSettings()
         {
