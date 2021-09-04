@@ -25,6 +25,8 @@ namespace Excel
 
         Table table = new Table();
 
+        Thread thread;
+
         List<ExcelApp> excelApp = new List<ExcelApp>();
 
         public MainWindow()
@@ -58,6 +60,8 @@ namespace Excel
 
         private void startButton_Click(object sender, RoutedEventArgs e)
         {
+            CreateExcelFiles();
+
             SaveFileDialog saveFileDialog = new SaveFileDialog();
 
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -74,7 +78,15 @@ namespace Excel
             {
                 path = saveFileDialog.FileName;
 
-                AsyncStart();
+                ThreadStart threadst = new ThreadStart(() => { Start(); });
+
+                thread = new Thread(threadst);
+
+                thread.IsBackground = true;
+
+                thread.Start();
+
+                //AsyncStart();
 
                 loadingStackPanel.Visibility = Visibility.Visible;
 
@@ -111,9 +123,59 @@ namespace Excel
             foreach (var app in excelApp)
             {
                 if (app != null)
-                { 
+                {
+                    thread.Abort();
+
                     app.Close();
                 }
+            }
+        }
+
+        public void Start()
+        {
+            if (CheckningSettings())
+            {
+
+                table.SetExcelApp(excelApp[0]);
+
+                table.AddHeaders(r1, c1, r2, c2);
+
+                // set value 
+
+                int i = 0;
+
+                foreach (var app in excelApp)
+                {
+                    if (i != 0)
+                    {
+                        table.SetExcelApp(app);
+                    }
+
+                    try
+                    {
+                        if (excelApp[i].Opened)
+                        {
+                            table.AddValues(c1, r2, c2, orderby);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        sameTables = false;
+                    }
+                    i++;
+                }
+                // fill excel file
+                if (sameTables)
+                {
+                    excelApp[0].TableToExcelFile(table, path);
+                }
+                else
+                {
+                    MessageBox.Show("Таблицы не одинаковы!");
+                }
+
+                LoadEnd();
+
             }
         }
 
@@ -174,34 +236,40 @@ namespace Excel
 
         public bool CheckningSettings()
         {
+            bool check = false;
 
-            if (listbox.Items.Count > 0)
+            Dispatcher.Invoke(new Action(() =>
             {
-                if (int.TryParse(r1textbox.Text, out r1) && int.TryParse(r2textbox.Text, out r2)
-                    && int.TryParse(c1textbox.Text, out c1) && int.TryParse(c2textbox.Text, out c2)
-                    && r2 >= r1 && c2 > c1)
+                if (listbox.Items.Count > 0)
                 {
-                    if (int.TryParse(orderByTextbox.Text, out orderby) && orderby <= c2)
+                    if (int.TryParse(r1textbox.Text, out r1) && int.TryParse(r2textbox.Text, out r2)
+                        && int.TryParse(c1textbox.Text, out c1) && int.TryParse(c2textbox.Text, out c2)
+                        && r2 >= r1 && c2 > c1)
                     {
-                        return true;
+                        if (int.TryParse(orderByTextbox.Text, out orderby) && orderby <= c2)
+                        {
+                            check = true;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Номер столбца заполнен неправильно!");
+                            check = false;
+                        }
                     }
                     else
                     {
-                        MessageBox.Show("Номер столбца заполнен неправильно!");
-                        return false;
+                        MessageBox.Show("Шапка заполнена неправильно!");
+                        check = false;
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Шапка заполнена неправильно!");
-                    return false;
+                    MessageBox.Show("Файлы не выбраны!");
+                    check = false;
                 }
-            }
-            else
-            {
-                MessageBox.Show("Файлы не выбраны!");
-                return false;
-            }
+            }));
+
+            return check;
         }
 
     }
