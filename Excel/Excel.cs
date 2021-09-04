@@ -90,9 +90,15 @@ namespace Excel
 
             Closed();
 
-            wb.Close();
+            if (wb != null)
+            {
+                wb.Close();
+            }
 
-            excel.Quit();
+            if (excel != null)
+            {
+                excel.Quit();
+            }
 
             try
             {

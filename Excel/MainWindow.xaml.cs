@@ -29,6 +29,8 @@ namespace Excel
 
         List<ExcelApp> excelApp = new List<ExcelApp>();
 
+        ExcelApp newApp;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -38,7 +40,26 @@ namespace Excel
 
         private void MainWindow_Closed(object sender, EventArgs e)
         {
-            CloseApps();
+            if (thread != null)
+            {
+                thread.Abort();
+            }
+
+            Thread.Sleep(2000);
+
+            foreach (var app in excelApp)
+            {
+                if (app != null)
+                {
+                    app.Close();
+
+                    if (newApp != null)
+                    {
+                        newApp.Close();
+
+                    }
+                }
+            }
         }
 
         private void addButton_Click(object sender, RoutedEventArgs e)
@@ -60,7 +81,6 @@ namespace Excel
 
         private void startButton_Click(object sender, RoutedEventArgs e)
         {
-            CreateExcelFiles();
 
             SaveFileDialog saveFileDialog = new SaveFileDialog();
 
@@ -76,6 +96,10 @@ namespace Excel
 
             if (saveFileDialog.ShowDialog() == true)
             {
+                CreateExcelFiles();
+
+                newApp = new ExcelApp();
+
                 path = saveFileDialog.FileName;
 
                 ThreadStart threadst = new ThreadStart(() => { Start(); });
@@ -118,24 +142,10 @@ namespace Excel
             (o as ExcelApp).Opened = false;
         }
 
-        private void CloseApps()
-        {
-            foreach (var app in excelApp)
-            {
-                if (app != null)
-                {
-                    thread.Abort();
-
-                    app.Close();
-                }
-            }
-        }
-
         public void Start()
         {
             if (CheckningSettings())
             {
-
                 table.SetExcelApp(excelApp[0]);
 
                 table.AddHeaders(r1, c1, r2, c2);
@@ -220,7 +230,7 @@ namespace Excel
                         // fill excel file
                         if (sameTables)
                         {
-                            excelApp[0].TableToExcelFile(table, path);
+                            newApp.TableToExcelFile(table, path);
                         }
                         else
                         {
