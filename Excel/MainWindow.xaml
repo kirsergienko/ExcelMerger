@@ -20,14 +20,12 @@
         <StackPanel Grid.Row="0">
             <Label Content="Координаты шапки таблиц:"></Label>
             <WrapPanel>
-                <Label Content="R1:"></Label>
-                <TextBox x:Name="r1textbox" Width="40" Height="15" Margin="5"></TextBox>
-                <Label Content="R2:"></Label>
-                <TextBox x:Name="r2textbox" Width="40" Height="15" Margin="5"></TextBox>
-                <Label Content="C1:"></Label>
-                <TextBox x:Name="c1textbox" Width="40" Height="15" Margin="5"></TextBox>
-                <Label Content="C2:"></Label>
-                <TextBox x:Name="c2textbox" Width="40" Height="15" Margin="5"></TextBox>
+                <Label Content="Строка:"></Label>
+                <TextBox x:Name="r1textbox" Width="30" Height="17" Margin="5"></TextBox>
+                <Label Content="Колонка 1:"></Label>
+                <TextBox x:Name="c1textbox" Width="30" Height="17" Margin="5"></TextBox>
+                <Label Content="Колонка 2:"></Label>
+                <TextBox x:Name="c2textbox" Width="29" Height="17" Margin="5"></TextBox>
                 <Label Content="Номер столбца для сортировки:"></Label>
                 <TextBox x:Name="orderByTextbox" Width="40" Height="15"></TextBox>
             </WrapPanel>

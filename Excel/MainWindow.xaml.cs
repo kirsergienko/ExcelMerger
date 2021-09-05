@@ -45,8 +45,6 @@ namespace Excel
                 thread.Abort();
             }
 
-            Thread.Sleep(2000);
-
             foreach (var app in excelApp)
             {
                 if (app != null)
@@ -196,13 +194,14 @@ namespace Excel
             {
                 if (listbox.Items.Count > 0)
                 {
-                    if (int.TryParse(r1textbox.Text, out r1) && int.TryParse(r2textbox.Text, out r2)
-                        && int.TryParse(c1textbox.Text, out c1) && int.TryParse(c2textbox.Text, out c2)
-                        && r2 >= r1 && c2 > c1)
+                    if (int.TryParse(r1textbox.Text, out r1) && int.TryParse(c1textbox.Text, out c1) && int.TryParse(c2textbox.Text, out c2)
+                         && c2 > c1)
                     {
                         if (int.TryParse(orderByTextbox.Text, out orderby) && orderby <= c2)
                         {
                             check = true;
+
+                            r2 = r1;
                         }
                         else
                         {
